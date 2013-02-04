@@ -35,3 +35,4 @@ cdef extern from "chipmunk/chipmunk.h":
 cdef class Body:
     cdef cpBody* _body
     cdef int automanaged
+    cdef public object data

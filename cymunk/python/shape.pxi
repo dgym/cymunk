@@ -9,6 +9,7 @@ cdef class Shape:
     cdef cpShape* _shape
     cdef int automanaged
     cdef Body _body
+    cdef public object data
 
     def __init__(self):
         self._shape = NULL
