@@ -99,3 +99,5 @@ cdef extern from "chipmunk/chipmunk.h":
             void *data
     )
 
+    ctypedef void (*cpSpaceShapeQueryFunc)(cpShape *shape, cpContactPointSet *points, void *data)
+    cpBool cpSpaceShapeQuery(cpSpace *space, cpShape *shape, cpSpaceShapeQueryFunc func, void *data)

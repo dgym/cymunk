@@ -72,6 +72,16 @@ cdef bool _collision_seperate_func(cpArbiter *_arb, cpSpace *_space, void *_data
 
     return False
 
+cdef void _space_shape_query_func(cpShape *shape, cpContactPointSet *points, void *data):
+    cdef object obj = <object>(<PyObject *>data)
+    cdef Space space = <Space>(obj[0])
+    cdef object contacts = obj[1]
+    if shape.hashid_private in space._shapes:
+        contacts.append(space._shapes[shape.hashid_private])
+    elif shape.hashid_private in space._static_shapes:
+        contacts.append(space._static_shapes[shape.hashid_private])
+
+
 cdef class Space:
     '''
     Spaces are the basic unit of simulation. You add rigid bodies, shapes and
@@ -400,3 +410,11 @@ cdef class Space:
             _collision_seperate_func,
             <PyObject *>self)
 
+    def shape_query(self, Shape shape):
+        contacts = []
+        data = (self, contacts)
+        cpSpaceShapeQuery(self._space,
+            shape._shape,
+            _space_shape_query_func,
+            <PyObject *>data)
+        return contacts
